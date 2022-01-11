@@ -18,15 +18,32 @@ const Header = () => {
 
   return (
     <header>
-      <Navbar expand='lg' collapseOnSelect>
+      <Navbar bg='primary' expand='lg' collapseOnSelect>
         <Container>
-          <LinkContainer to='/'>
-            <Navbar.Brand>ChiChi</Navbar.Brand>
+          <LinkContainer
+            style={{
+              fontSize: '30px',
+              color: 'white',
+              fontFamily: 'Lucida Handwriting',
+            }}
+            to='/'
+          >
+            <Navbar.Brand>dream filters</Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
-            <Route render={({ history }) => <SearchBox history={history} />} />
-            <Nav className='ms-auto'>
+            <div
+              style={{
+                marginBottom: '5px',
+                marginLeft: 'auto',
+                marginRight: '0',
+              }}
+            >
+              <Route
+                render={({ history }) => <SearchBox history={history} />}
+              />
+            </div>
+            <Nav className='ml-auto'>
               <LinkContainer to='/cart'>
                 <Nav.Link>
                   <i className='fas fa-shopping-cart'></i> Cart
@@ -58,6 +75,9 @@ const Header = () => {
                   </LinkContainer>
                   <LinkContainer to='/admin/orderlist'>
                     <NavDropdown.Item>Orders</NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to='/admin/carousellist'>
+                    <NavDropdown.Item>Carousel</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
               )}
