@@ -23,6 +23,23 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
   PRODUCT_TOP_FAIL,
+  CAROUSEL_REQUEST,
+  CAROUSEL_SUCCESS,
+  CAROUSEL_FAIL,
+  CAROUSEL_DELETE_REQUEST,
+  CAROUSEL_DELETE_SUCCESS,
+  CAROUSEL_DELETE_FAIL,
+  CAROUSEL_LIST_REQUEST,
+  CAROUSEL_LIST_SUCCESS,
+  CAROUSEL_LIST_FAIL,
+  CAROUSEL_DETAILS_REQUEST,
+  CAROUSEL_DETAILS_SUCCESS,
+  CAROUSEL_DETAILS_FAIL,
+  CAROUSEL_LIST_RESET,
+  CAROUSEL_RESET,
+  PRODUCT_BEST_REQUEST,
+  PRODUCT_BEST_SUCCESS,
+  PRODUCT_BEST_FAIL,
 } from '../constants/productConstants'
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -30,14 +47,24 @@ export const productListReducer = (state = { products: [] }, action) => {
     case PRODUCT_LIST_REQUEST:
       return { loading: true, products: [] }
     case PRODUCT_LIST_SUCCESS:
-      return {
-        loading: false,
-        products: action.payload.products,
-        pages: action.payload.pages,
-        page: action.payload.page,
-      }
+      return { loading: false, products: action.payload }
     case PRODUCT_LIST_FAIL:
       return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const carouselListReducer = (state = { carousels: [] }, action) => {
+  switch (action.type) {
+    case CAROUSEL_LIST_REQUEST:
+      return { loading: true }
+    case CAROUSEL_LIST_SUCCESS:
+      return { loading: false, carousels: action.payload }
+    case CAROUSEL_LIST_FAIL:
+      return { loading: false, error: action.payload }
+    case CAROUSEL_LIST_RESET:
+      return { carousels: [] }
     default:
       return state
   }
@@ -59,6 +86,19 @@ export const productDetailsReducer = (
   }
 }
 
+export const carImageDetailsReducer = (state = { carousel: {} }, action) => {
+  switch (action.type) {
+    case CAROUSEL_DETAILS_REQUEST:
+      return { ...state, loading: true }
+    case CAROUSEL_DETAILS_SUCCESS:
+      return { loading: false, carousel: action.payload }
+    case CAROUSEL_DETAILS_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
 export const productDeleteReducer = (state = {}, action) => {
   switch (action.type) {
     case PRODUCT_DELETE_REQUEST:
@@ -66,6 +106,19 @@ export const productDeleteReducer = (state = {}, action) => {
     case PRODUCT_DELETE_SUCCESS:
       return { loading: false, success: true }
     case PRODUCT_DELETE_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const carImageDeleteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CAROUSEL_DELETE_REQUEST:
+      return { loading: true }
+    case CAROUSEL_DELETE_SUCCESS:
+      return { loading: false, success: true }
+    case CAROUSEL_DELETE_FAIL:
       return { loading: false, error: action.payload }
     default:
       return state
@@ -82,6 +135,36 @@ export const productCreateReducer = (state = {}, action) => {
       return { loading: false, error: action.payload }
     case PRODUCT_CREATE_RESET:
       return {}
+    default:
+      return state
+  }
+}
+
+export const carImageCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CAROUSEL_REQUEST:
+      return { loading: true }
+    case CAROUSEL_SUCCESS:
+      return { loading: false, success: true, carousel: action.payload }
+    case CAROUSEL_FAIL:
+      return { loading: false, error: action.payload }
+    case CAROUSEL_RESET:
+      return {}
+    default:
+      return state
+  }
+}
+
+export const carImageUpdateReducer = (state = { carousel: {} }, action) => {
+  switch (action.type) {
+    case PRODUCT_UPDATE_REQUEST:
+      return { loading: true }
+    case PRODUCT_UPDATE_SUCCESS:
+      return { loading: false, success: true }
+    case PRODUCT_UPDATE_FAIL:
+      return { loading: false, error: action.payload }
+    case PRODUCT_UPDATE_RESET:
+      return { carousel: {} }
     default:
       return state
   }
@@ -124,6 +207,19 @@ export const productTopRatedReducer = (state = { products: [] }, action) => {
     case PRODUCT_TOP_SUCCESS:
       return { loading: false, products: action.payload }
     case PRODUCT_TOP_FAIL:
+      return { loading: false, error: action.payload }
+    default:
+      return state
+  }
+}
+
+export const productBestReducer = (state = { products: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_BEST_REQUEST:
+      return { loading: true, products: [] }
+    case PRODUCT_BEST_SUCCESS:
+      return { loading: false, products: action.payload }
+    case PRODUCT_BEST_FAIL:
       return { loading: false, error: action.payload }
     default:
       return state

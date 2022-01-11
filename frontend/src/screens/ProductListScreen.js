@@ -77,7 +77,11 @@ const ProductListScreen = ({ history, match }) => {
           <h1>Products</h1>
         </Col>
         <Col className='text-right'>
-          <Button className='my-3' onClick={createProductHandler}>
+          <Button
+            style={{ float: 'right' }}
+            className='my-3'
+            onClick={createProductHandler}
+          >
             <i className='fas fa-plus'></i> Create Product
           </Button>
         </Col>
@@ -99,7 +103,6 @@ const ProductListScreen = ({ history, match }) => {
                 <th>NAME</th>
                 <th>PRICE</th>
                 <th>CATEGORY</th>
-                <th>COLOR</th>
                 <th></th>
               </tr>
             </thead>
@@ -108,9 +111,8 @@ const ProductListScreen = ({ history, match }) => {
                 <tr key={product._id}>
                   <td>{product._id}</td>
                   <td>{product.name}</td>
-                  <td>${product.price}</td>
+                  <td>Rs.{product.price}</td>
                   <td>{product.category}</td>
-                  <td>{product.brand}</td>
                   <td>
                     <LinkContainer to={`/admin/product/${product._id}/edit`}>
                       <Button variant='light' className='btn-sm'>

@@ -29,6 +29,41 @@ const CartScreen = ({ match, location, history }) => {
     history.push('/login?redirect=shipping')
   }
 
+  var totalcost = cartItems.reduce(
+    (acc, item) => acc + item.qty * item.price,
+    0
+  )
+  var length = cartItems.reduce((acc, item) => acc + item.qty, 0)
+
+  function shipper(qty, string) {
+    var arr = []
+    for (var i = 0; i < qty; i++) {
+      arr[i] = string + ','
+    }
+    return arr
+  }
+
+  function final(arr) {
+    var sum = 0
+    arr[arr.length - 1] = 0
+    for (var i = 0; i < arr.length; i = i + 3) {
+      sum = sum + parseInt(arr[i])
+    }
+    return sum
+  }
+
+  var scArray = cartItems.map((item) => shipper(item.qty, item.shipcharge))
+
+  scArray.sort()
+  scArray.reverse()
+
+  var k = scArray.toString() + ','
+
+  var myArray = k.split(',,')
+
+  var sc = final(myArray)
+  //var sc = myArray
+
   return (
     <Row>
       <Col md={8}>
@@ -38,19 +73,30 @@ const CartScreen = ({ match, location, history }) => {
             Your cart is empty <Link to='/'>Go Back</Link>
           </Message>
         ) : (
-          <ListGroup variant='flush'>
+          <ListGroup
+            style={{
+              height: '100px',
+              lineHeight: '100px',
+              textAlign: 'center',
+            }}
+            variant='flush'
+          >
             {cartItems.map((item) => (
               <ListGroup.Item key={item.product}>
                 <Row>
-                  <Col md={2}>
-                    <Image src={item.image} alt={item.name} fluid rounded />
+                  <Col md>
+                    <Link to={`/product/${item.product}`}>
+                      <Image src={item.image} alt={item.name} fluid rounded />
+                    </Link>
                   </Col>
                   <Col md={3}>
                     <Link to={`/product/${item.product}`}>{item.name}</Link>
                   </Col>
-                  <Col md={2}>${item.price}</Col>
-                  <Col md={2}>
+                  <Col md>Rs.{item.price}</Col>
+
+                  <Col md>
                     <Form.Control
+                      style={{ marginTop: '35px' }}
                       as='select'
                       value={item.qty}
                       onChange={(e) =>
@@ -66,7 +112,7 @@ const CartScreen = ({ match, location, history }) => {
                       ))}
                     </Form.Control>
                   </Col>
-                  <Col md={2}>
+                  <Col md>
                     <Button
                       type='button'
                       variant='light'
@@ -89,10 +135,32 @@ const CartScreen = ({ match, location, history }) => {
                 Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
                 items
               </h2>
-              Rs.
-              {cartItems
-                .reduce((acc, item) => acc + item.qty * item.price, 0)
-                .toFixed(2)}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col> Price : </Col>{' '}
+                <Col>
+                  {' '}
+                  Rs.
+                  {totalcost}
+                </Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col> Shipping : </Col>
+                <Col>Rs.{sc}</Col>
+              </Row>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              <Row>
+                <Col> Total </Col>{' '}
+                <Col>
+                  {' '}
+                  Rs.
+                  {sc + totalcost}
+                </Col>
+              </Row>
             </ListGroup.Item>
             <ListGroup.Item>
               <Button

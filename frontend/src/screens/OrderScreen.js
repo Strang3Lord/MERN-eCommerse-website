@@ -16,10 +16,14 @@ import {
   ORDER_DELIVER_RESET,
 } from '../constants/orderConstants'
 
+import { getOrder } from '../actions/apiCalls'
+
 const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id
 
   const [sdkReady, setSdkReady] = useState(false)
+
+  const [name, setName] = useState('Mehul')
 
   const dispatch = useDispatch()
 
@@ -83,6 +87,63 @@ const OrderScreen = ({ match, history }) => {
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order))
+  }
+  const [values, setValues] = useState({
+    amount: 1000,
+    porderId: '',
+    perror: '',
+    psuccess: false,
+  })
+
+  const { amount, porderId, psuccess, perror } = values
+  useEffect(() => {
+    createOrder()
+  }, [])
+
+  const createOrder = () => {
+    getOrder().then((response) => {
+      if (response.error) {
+        setValues({ ...values, perror: response.error, psuccess: false })
+      } else {
+        setValues({
+          ...values,
+          perror: '',
+          psuccess: true,
+          porderId: response.id,
+          amount: response.amount,
+        })
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (amount > 0 && porderId != '') {
+      showRazoryPay()
+    }
+  }, [amount])
+
+  const showRazoryPay = () => {
+    const form = document.createElement('form')
+    form.setAttribute('action', `http://localhost:3000/payment/callback`)
+    form.setAttribute('method', 'POST')
+    const script = document.createElement('script')
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+    script.setAttribute('data-key', 'rzp_test_cCjXZJsH7QckCl')
+    script.setAttribute('data-amount', amount)
+    script.setAttribute('data-name', 'ChiChi')
+    script.setAttribute('data-prefill.contact', '9678452132')
+    script.setAttribute('data-prefill.email', 'abc@gmail.com')
+    script.setAttribute('data-order_id', porderId)
+    script.setAttribute('data-prefill.name', 'Lalit Patel')
+    script.setAttribute('data-image', `http://localhost:3000/logo`)
+    script.setAttribute('data-buttontext', 'Buy NOW!!!')
+    document.body.appendChild(form)
+    form.appendChild(script)
+    const input = document.createElement('input')
+    input.type = 'hidden'
+    input.custom = 'Hidden Element'
+    input.name = 'hidden'
+    form.appendChild(input)
   }
 
   return loading ? (
@@ -155,7 +216,8 @@ const OrderScreen = ({ match, history }) => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ${item.price} = ${item.qty * item.price}
+                          {item.qty} x Rs.{item.price} = Rs.
+                          {item.qty * item.price}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -174,38 +236,37 @@ const OrderScreen = ({ match, history }) => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>${order.itemsPrice}</Col>
+                  <Col>Rs.{order.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>${order.shippingPrice}</Col>
+                  <Col>Rs.{order.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>${order.taxPrice}</Col>
+                  <Col>Rs.{order.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
-                  <Col>${order.totalPrice}</Col>
+                  <Col>Rs.{order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
               {!order.isPaid && (
                 <ListGroup.Item>
-                  {loadingPay && <Loader />}
-                  {!sdkReady ? (
-                    <Loader />
-                  ) : (
-                    <PayPalButton
-                      amount={order.totalPrice}
-                      onSuccess={successPaymentHandler}
-                    />
-                  )}
+                  <Button
+                    className='App-link'
+                    onClick={showRazoryPay}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    Pay {order.totalPrice}
+                  </Button>
                 </ListGroup.Item>
               )}
               {loadingDeliver && <Loader />}

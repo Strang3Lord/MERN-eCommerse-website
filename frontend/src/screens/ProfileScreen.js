@@ -77,7 +77,9 @@ const ProfileScreen = ({ location, history }) => {
             </Form.Group>
 
             <Form.Group controlId='email'>
-              <Form.Label>Email Address</Form.Label>
+              <Form.Label style={{ marginTop: ' 25px' }}>
+                Email Address
+              </Form.Label>
               <Form.Control
                 type='email'
                 placeholder='Enter email'
@@ -87,7 +89,7 @@ const ProfileScreen = ({ location, history }) => {
             </Form.Group>
 
             <Form.Group controlId='password'>
-              <Form.Label>Password</Form.Label>
+              <Form.Label style={{ marginTop: ' 25px' }}>Password</Form.Label>
               <Form.Control
                 type='password'
                 placeholder='Enter password'
@@ -97,7 +99,9 @@ const ProfileScreen = ({ location, history }) => {
             </Form.Group>
 
             <Form.Group controlId='confirmPassword'>
-              <Form.Label>Confirm Password</Form.Label>
+              <Form.Label style={{ marginTop: ' 25px' }}>
+                Confirm Password
+              </Form.Label>
               <Form.Control
                 type='password'
                 placeholder='Confirm password'
@@ -106,12 +110,25 @@ const ProfileScreen = ({ location, history }) => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type='submit' variant='primary'>
+            <Button
+              style={{ marginTop: ' 20px', width: '100%' }}
+              ype='submit'
+              variant='primary'
+            >
               Update
             </Button>
           </Form>
         )}
+        <hr
+          style={{
+            marginTop: '1rem',
+            marginBottom: '1rem',
+            border: '0',
+            height: '5px',
+          }}
+        />
       </Col>
+
       <Col md={9}>
         <h2>My Orders</h2>
         {loadingOrders ? (
